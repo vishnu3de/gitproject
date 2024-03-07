@@ -1,7 +1,7 @@
 {
     'name': 'Upgrade Systray',
     'description': """Allow users to upgrade modules from systray directly""",
-    'author': "vishnu",
+    'author': "vishnujnair",
     'depends': [],
     'data': [
     ],
