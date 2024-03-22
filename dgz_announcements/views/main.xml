@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="announcement_color" model="ir.ui.view">
+        <field name="name">announcement_color</field>
+        <field name="model">dgz.announcements</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="announcement"/>
+                            <field name="url_link"/>
+                            <field name="bg_color" widget="color"/>
+                        </group>
+                        <group>
+                            <field name="active_state" widget="boolean_toggle"/>
+                            <field name="font_color" widget="color"/>
+                            <field name="scheduled_date"/>
+                            <field name="announcement_ids" widget="many2many_tags" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="announcement_color_tree" model="ir.ui.view">
+        <field name="name">announcement_color_tree</field>
+        <field name="model">dgz.announcements</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="announcement"/>
+                <field name="bg_color" widget="color"/>
+                <field name="scheduled_date"/>
+                <field name="active_state" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+    <record id="dgz_announcement_view" model="ir.actions.act_window">
+        <field name="name">Announcement</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">dgz.announcements</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            id="dgz_announcement_menu"
+            groups="dgz_announcements.group_announcement_admin"
+            name="Announcements"
+            action="dgz_announcement_view"
+            sequence="10"/>
+</odoo>
