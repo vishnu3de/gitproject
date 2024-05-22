@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="feedback_header">
+        <div class="header">
+            <img src="/survey_dgz/static/header/img.png" alt="Your Image Alt Text" width="1180" height="220"/>
+        </div>
+        <div class="article">
+            <t t-out="0"/>
+        </div>
+        <div class="footer">
+            <div class="row" style="font-size:8;">
+                <div class="col-xs-6 text-right">
+                    <center>
+                        <span class="page" style="padding-top:500px"/>
+                        /
+                        <span class="topage"/>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="view_testron_feedback_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="survey_dgz.feedback_header">
+                    <br/>
+                    <div class="page">
+
+                        <style>
+                            .th, td{
+                            border-collapse: collapse;
+                            padding: 3px;
+                            vertical-align: middle;
+                            padding-left: 10px;
+                            }
+                            .a {
+                            border-color: #bdbebf;
+                            }
+
+                        </style>
+
+                        <br/>
+                        <h4 style="color:#7d7a7a;">
+                            <b>CUSTOMER FEEDBACK FORM</b>
+                        </h4>
+                        <br/>
+
+                        <div style="background-color:#dedede;height:50px;vertical-align: middle;padding-left: 10px;"
+                             width="100%">
+                            <div style="padding-top:15px;">Kindly complete the customer feedback form for our internal
+                                TQM.
+                            </div>
+                        </div>
+                        <table width="100%">
+
+                            <tr style="background-color:#dedede;height:50px;">
+                                <td style="width:25%;">
+                                    COMPANY NAME
+                                </td>
+                                <td style="width:25%;">
+                                    CONTACT PERSON
+                                </td>
+                                <td style="width:25%;">
+                                    Email
+                                </td>
+                                <td style="width:25%;">
+                                    Date
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:15px;">
+                                    <t t-if="doc.partner_id.company_name">
+                                        <t t-esc="doc.partner_id.company_name"/>
+                                    </t>
+                                </td>
+                                <td style="padding:15px;">
+                                    <t t-esc="doc.partner_id.name"/>
+                                </td>
+                                <td style="padding:15px;">
+                                    <t t-esc="doc.email"/>
+                                </td>
+                                <td style="padding:15px;">
+                                    <t t-esc="doc.create_date"/>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                        <h4 style="padding-top:25px;color:#7d7a7a;">
+                            <b>OVERALL CUSTOMER EXPERIENCE</b>
+                        </h4>
+
+                        <table width="100%">
+                            <tr style="width:25%;">
+                                <td>
+                                </td>
+                                <td style="background-color:#d4dbfa;width:25%;font-size: 13px;">
+                                    <center>
+                                        <b>VERY GOOD</b>
+                                    </center>
+                                </td>
+                                <td style="background-color:#d4dbfa;width:25%;font-size: 13px;">
+                                    <center>
+                                        <b>GOOD</b>
+                                    </center>
+                                </td>
+                                <td style="background-color:#d4dbfa;width:25%;font-size: 13px;">
+                                    <center>
+                                        <b>FAIR</b>
+                                    </center>
+                                </td>
+                            </tr>
+                            <t t-foreach="doc.user_input_line_ids" t-as="line">
+                                <t t-if="line.suggested_answer_id.question_id.question_type == 'matrix'">
+                                    <tr>
+                                        <td style="background-color:#d4dbfa;padding:10px;">
+                                            <t t-esc="line.matrix_row_id.value"/>
+                                        </td>
+                                        <td style="background-color:#e0c6bf;padding:10px;text-align:center;">
+                                            <t t-if="line.suggested_answer_id.value == 'Very good'">
+                                                <span>&#x2713;</span>
+                                            </t>
+                                        </td>
+                                        <td style="background-color:#e0c6bf;padding:10px;text-align:center;">
+                                            <t t-if="line.suggested_answer_id.value == 'Good'">
+                                                <span>&#x2713;</span>
+                                            </t>
+                                        </td>
+                                        <td style="background-color:#e0c6bf;padding:10px;text-align:center;">
+                                            <t t-if="line.suggested_answer_id.value == 'Fair'">
+                                                <span>&#x2713;</span>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                        </table>
+
+                        <br/>
+                        <h6>Kindly provide any additional comments or suggestions.</h6>
+                        <table width="100%" style="height:20px;" class="a">
+                            <td>
+                                <t t-foreach="doc.user_input_line_ids" t-as="line">
+                                <t t-if="line.question_id.question_type == 'char_box'">
+                                        <t t-esc="line.value_char_box"/>
+                                    </t>
+                                </t>
+
+                            </td>
+                        </table>
+                        <h4 style="color:#7d7a7a;">
+                            <b>OVERALL CUSTOMER EXPERIENCE</b>
+                        </h4>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

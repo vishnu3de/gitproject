@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="survey_button_form_view_inherit" inherit_id="survey.survey_button_form_view">
+            <xpath expr="//div[@class='text-center']" position="replace">
+                    <img src="/survey_dgz/static/src/img/TESTRON_FEEDBACK_HEADER.jpg" alt="Header Image" style="width: 100%; height: 20ch; margin-left: 0px;" />
+            </xpath>
+        </template>
+
+        <record id="view_survey_page" model="ir.ui.view">
+        <field name="name">survey.survey</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page/group[@name='options']/group[4]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+    </data>
+</odoo>

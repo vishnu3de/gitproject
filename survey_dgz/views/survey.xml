@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Wizard View -->
+    <record id="survey_question_inherited" model="ir.ui.view">
+        <field name="name">survey.question.inherited</field>
+        <field name="model">survey.question</field>
+        <field name="inherit_id" ref="survey.survey_question_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='title']" position="after">
+                <group>
+                    <field name="checkbox" widget="boolean_toggle"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="survey_invite_inherited" model="ir.ui.view">
+        <field name="name">survey.invite.inherited</field>
+        <field name="model">survey.invite</field>
+        <field name="inherit_id" ref="survey.survey_invite_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_survey_inherited" model="ir.ui.view">
+        <field name="name">dgz.survey.inherited</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='question_type']" position="after">
+                <field name="checkbox" widget="boolean_toggle"/>
+            </xpath>
+            <xpath expr="//header/button[@name='action_start_session']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//header/button[@name='action_result_survey']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//header/button[@name='action_print_survey']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='scoring']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <!-- Include the necessary fields in the view -->
+                <field name="survey_users_can_signup" invisible="1"/>
+                <field name="survey_users_login_required" invisible="1"/>
+                <field name="partner_ids"
+                       widget="many2many_tags_email"
+                       placeholder="Add existing contacts..."
+                       context="{'force_email':True, 'show_email':True, 'no_create_edit': True}"/>
+            </xpath>
+            <xpath expr="//notebook/page[@name='options']/group/group[@name='participants']" position="after">
+                <group string="Reset" name="reset">
+                    <label for="expire_onoff" string="Reset Link"/>
+                    <div>
+                        <field name="expire_onoff" class="oe_inline"/>
+                    </div>
+                    <label for="token_expiration" string="Expire in"
+                           attrs="{'invisible': [('expire_onoff', '=', False)]}"/>
+                    <div>
+                        <field name="token_expiration" class="oe_inline"
+                               attrs="{'invisible': [('expire_onoff', '=', False)]}"/>
+                        <field name="interval_type" class="oe_inline"
+                               attrs="{'invisible': [('expire_onoff', '=', False)]}"/>
+                    </div>
+                    <label for="date_expire" string="Expire on" attrs="{'invisible': [('expire_onoff', '=', False)]}"/>
+                    <div>
+                        <field name="date_expire" attrs="{'invisible': [('expire_onoff', '=', False)]}"/>
+                    </div>
+
+                </group>
+            </xpath>
+            <xpath expr="//notebook/page[@name='options']/group[@name='options']/group[4]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="crm_survey_kanban_inherited" model="ir.ui.view">
+        <field name="name">dgz.survey.kanban.inherited</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_start_session']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//button[@name='action_result_survey']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
