@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    TREE VIEW-->
+
+    <record id="view_crm_inherit_new_tree" model="ir.ui.view">
+        <field name="name">Crm Tree View</field>
+        <field name="model">crm.target</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="goal_startdate"/>
+                <field name="goal_deadline"/>
+                <field name="yearly_target"/>
+                <field name="won_target"/>
+                <field name="select_state" decoration-warning="select_state == 'ongoing'"
+                       decoration-success="select_state == 'completed'" decoration-danger="select_state == 'closed'"
+                       widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    FORM  VIEW  -->
+
+    <record id="view_crm_target_form" model="ir.ui.view">
+        <field name="name">Crm form View</field>
+        <field name="model">crm.target</field>
+        <field name="groups_id" eval="[(4, ref('crm_target.crm_target_admin'))]"/>
+        <field name="arch" type="xml">
+            <form>
+                <field name="flag" invisible="1"/>
+                <header>
+                    <button name="close_status" type="object" class="btn btn-primary" string="Close Target"
+                            attrs="{'invisible':[('select_state','=','closed')]}" groups="crm_target.crm_target_admin"/>
+                    <button name="draft_status" type="object" class="btn btn-primary" string="Draft"
+                            attrs="{'invisible':[('select_state','!=','closed')]}"
+                            groups="crm_target.crm_target_admin"/>
+                    <button name="ongoing_status" type="object" class="btn btn-primary" string="Ongoing"
+                            attrs="{'invisible':[('select_state','!=','draft')]}" groups="crm_target.crm_target_admin"/>
+                    <button name="send_mail" type="object" class="btn btn-primary" string="Send Mail"
+                            attrs="{'invisible':[('select_state','!=','ongoing')]}"
+                            groups="crm_target.crm_target_admin"/>
+                    <field name="select_state" widget="statusbar" options="{'clickable': '0'}"
+                           groups="crm_target.crm_target_admin"/>
+                </header>
+                <sheet>
+                    <strong attrs="{ 'invisible': [('flag', '=', True)] }">
+                        <span>This form can only be created by admin. Kindly ignore this message if you are an
+                            administrator.
+                        </span>
+                    </strong>
+                    <br></br>
+                    <group>
+                        <h1 groups="crm_target.crm_target_admin">SalesPerson</h1>
+                        <h2>
+                            <field name="name" required="1" widget="many2one_avatar_user"
+                                   groups="crm_target.crm_target_admin"/>
+                        </h2>
+                    </group>
+                    <group>
+                        <field name="email" required="1" groups="crm_target.crm_target_admin"/>
+                        <field name="yearly_target" required="1" groups="crm_target.crm_target_admin"/>
+                        <field name="goal_startdate" required="1" groups="crm_target.crm_target_admin"/>
+                        <field name="goal_deadline" required="1" groups="crm_target.crm_target_admin"/>
+                        <field name="count_pipelines" groups="crm_target.crm_target_admin"/>
+                        <field name="won_target" readonly="1" groups="crm_target.crm_target_admin"/>
+                        <field name="sales_target_achievement" readonly="1" groups="crm_target.crm_target_admin"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter" groups="crm_target.crm_target_admin">
+                    <field name="message_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_follower_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <!--    KANBAN VIEW-->
+
+    <record id="view_crm_target_kanban" model="ir.ui.view">
+        <field name="name">crm.target Kanban</field>
+        <field name="model">crm.target</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="name" class="oe_background_grey o_kanban_dashboard o_crm_team_kanban" create="0"
+                    sample="1"
+                    records_draggable="0">
+                <field name="name"/>
+                <field name="yearly_target"/>
+                <field name="won_target"/>
+                <field name="goal_startdate"/>
+                <field name="goal_deadline"/>
+                <field name="select_state"/>
+                <field name="kanban_dashboard_graph"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record" role="button" tabindex="0"
+                             padding-top="5px">
+                            <div t-attf-class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary o_text_overflow">
+                                        <strong>
+                                            <field name="name"/>
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content">
+                                <div class="row o_kanban_card_upper_content">
+                                    <div class="col-4 o_kanban_primary_left" name="to_replace_in_sale_crm">
+                                        <button type="object" class="btn btn-primary"
+                                                name="action_primary_channel_button">Pipeline
+                                        </button>
+                                    </div>
+                                        <div class="row" t-if="record.opportunities_count.raw_value">
+                                            <div class="col-8">
+                                                <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action"
+                                                   context="{'search_default_open_opportunities': True}">
+                                                    <field name="count_pipelines" class="me-1"/>
+                                                    <t t-if="record.count_pipelines.raw_value == 1">Open
+                                                        Opportunity
+                                                    </t>
+                                                    <t t-else="">Open Opportunities</t>
+                                                </a>
+                                            </div>
+                                            <div class="col-4 text-end text-truncate">
+                                                <field name="opportunities_amount" widget="monetary"
+                                                       options="{'currency_field': 'currency_id'}"/>
+                                            </div>
+                                        </div>
+                                        <div class="row" t-if="record.opportunities_overdue_count.raw_value">
+                                            <div class="col-8">
+                                                <a name="%(crm_lead_action_team_overdue_opportunity)d" type="action">
+                                                    <field name="opportunities_overdue_count" class="me-1"/>
+                                                    <t t-if="record.opportunities_overdue_count.raw_value == 1">Overdue
+                                                        Opportunity
+                                                    </t>
+                                                    <t t-else="">Overdue Opportunities</t>
+                                                </a>
+                                            </div>
+                                            <div class="col-4 text-end text-truncate">
+                                                <field name="opportunities_overdue_amount" widget="monetary"
+                                                       options="{'currency_field': 'currency_id'}"/>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+
+
+                            <div class="o_kanban_card_content" style="border: none;">
+                                <group>
+                                    <button name="open_opportunity" class="btn btn-link" type="object">
+                                        <field name="count_pipelines"/>
+                                        Open Opportunities
+                                    </button>
+                                    <button name="won_states" class="btn btn-link" type="object">
+                                        <field name="won_target_count"/>
+                                        Won Opportunities
+                                    </button>
+                                    <br></br>
+
+                                    <br></br>
+                                    <t t-name="JournalBodyGraphs">
+                                        <div t-if="record.kanban_dashboard_graph.raw_value"
+                                             class="o_sales_team_kanban_graph_section">
+                                            <field name="kanban_dashboard_graph"
+                                                   t-att-graph_type="'bar'"
+                                                   widget="dashboard_graph"/>
+                                        </div>
+                                    </t>
+                                </group>
+
+                            </div>
+                            <div style="border: none; width: 106%; margin-left: -9px; margin-bottom: -8px; background-color: #e9ecef;">
+                                <field name="won_target" widget="progressbar" title="Target"
+                                       options="{'current_value': 'won_target', 'max_value': 'yearly_target', 'editable': false, 'edit_max_value': false, 'on_change': 'update_invoiced_target'}"
+                                       modifiers="{'readonly': true}"/>
+                                <field name="currency_id"/>
+                            </div>
+                        </div>
+                    </t>
+
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="crm_target_search" model="ir.ui.view">
+        <field name="name">crm.target.search</field>
+        <field name="model">crm.target</field>
+        <field name="arch" type="xml">
+            <search position="inside">
+                <filter string="Status" name="select_state" context="{'group_by':'select_state'}"/>
+                <filter string="Sales Person" name="name" context="{'group_by':'name'}"/>
+                <filter string="Target" name="yearly_target" context="{'group_by':'yearly_target'}"/>
+                <filter string="Won Target" name="won_target" context="{'group_by':'won_target'}"/>
+                <filter string="Start Date" name="goal_startdate" context="{'group_by':'goal_startdate'}"/>
+                <filter string="End Date" name="goal_deadline" context="{'group_by':'goal_deadline'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_crm_target_bar_chart" model="ir.ui.view">
+        <field name="name">CRM Target Bar Chart</field>
+        <field name="model">crm.target</field>
+        <field name="arch" type="xml">
+            <chart type="bar" stacked="true" group="name">
+                <field name="name"/>
+                <field name="yearly_target" type="bar" color="red"/>
+                <field name="won_target" type="bar" color="green"/>
+            </chart>
+        </field>
+    </record>
+
+
+    <record id="crm_target_action" model="ir.actions.act_window">
+        <field name="name">My Target</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">crm.target</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+</odoo>

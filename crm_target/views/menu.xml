@@ -1,0 +1,8 @@
+<odoo>
+    <record id="crm_report_sub_menu" model="ir.ui.menu">
+          <field name="name">Employee Report</field>
+          <field name="sequence" eval="1"/>
+          <field name="parent_id" ref="crm.crm_menu_report"/>
+          <field name="action" ref="crm_target.crm_track_action"/>
+    </record>
+</odoo>

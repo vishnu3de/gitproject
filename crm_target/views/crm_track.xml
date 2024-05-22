@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    TREE VIEW-->
+
+    <record id="view_crm_inherit_new_tree" model="ir.ui.view">
+        <field name="name">Crm Tree View</field>
+        <field name="model">crm.track</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="name"/>
+                <field name="count_pipelines"/>
+                <field name="won_leads"/>
+                <field name="lost_leads"/>
+                <field name="proposals"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="total_revenue" widget="monetary"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <!--    FORM  VIEW  -->
+
+    <record id="view_crm_track_form" model="ir.ui.view">
+        <field name="name">Crm form View</field>
+        <field name="model">crm.track</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group name="g1">
+                        <group name="counts">
+                            <field name="filter"/>
+                            <field name="date_from"  attrs="{'invisible':[('filter','!=',True)]}"/>
+                            <field name="date_to" attrs="{'invisible':[('filter','!=',True)]}"/>
+                            <field name="count_pipelines"/>
+                            <field name="won_leads"/>
+                            <field name="lost_leads"/>
+                            <field name="proposals"/>
+
+                        </group>
+                        <group name="amounts">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="opportunities_amount" widget="monetary"/>
+                            <field name="won_leads_amount" widget="monetary"/>
+                            <field name="lost_leads_amount" widget="monetary"/>
+                            <field name="total_revenue" widget="monetary"/>
+
+                        </group>
+
+
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+     <record id="crm_track_search" model="ir.ui.view">
+        <field name="name">crm.track.search</field>
+        <field name="model">crm.track</field>
+        <field name="arch" type="xml">
+            <search position="inside">
+                <filter string="Sales Person" name="name" context="{'group_by':'name'}"/>
+                <filter string="Open Opportunity" name="count_pipelines" context="{'group_by':'count_pipelines'}"/>
+                <filter string="Won" name="won_leads" context="{'group_by':'won_leads'}"/>
+                <filter string="Lost" name="lost_leads" context="{'group_by':'lost_leads'}"/>
+                <filter string="Open Opportunity Revenue" name="opportunities_amount" context="{'group_by':'opportunities_amount'}"/>
+                <filter string="Won Revenue" name="won_leads_amount" context="{'group_by':'won_leads_amount'}"/>
+                <filter string="Total Revenue" name="total_revenue" context="{'group_by':'total_revenue'}"/>
+                <filter string="Proposals" name="proposals" context="{'group_by':'proposals'}"/>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="crm_track_action" model="ir.actions.act_window">
+        <field name="name">My track</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">crm.track</field>
+        <field name="view_mode">tree,form,graph</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="employee_performance_footer_header">
+            <div class="header">
+                <img src="/crm_target/static/image/Header.jpg" style="width: 100%;"/>
+            </div>
+
+            <div class="article">
+                <t t-out="0"/>
+            </div>
+
+            <div class="footer">
+               <img  src="/crm_target/static/image/footer.jpg" style="width: 100%;"/>
+            </div>
+        </template>
+
+        <template id="employee_performance_report">
+            <t t-call="web.html_container">
+
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="crm_target.employee_performance_footer_header">
+                        <div class="page" style="margin-left:7px;margin-right:7px;">
+                            <div>
+                                <h3 style="text-align: center;">
+                                    <strong>COMMERCIAL INVOICE</strong>
+                                </h3>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

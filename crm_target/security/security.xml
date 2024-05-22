@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+     <record model="ir.module.category" id="module_category_crm_target">
+            <field name="name">CRM Target</field>
+            <field name="description">CRM Target</field>
+            <field name="sequence">45</field>
+     </record>
+
+
+    <record id="crm_target_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="module_category_crm_target"/>
+    </record>
+
+
+    <record id="crm_target_admin" model="res.groups">
+        <field name="name">Administration</field>
+        <field name="category_id" ref="module_category_crm_target"/>
+        <field name="implied_ids" eval="[(4,ref('crm_target_user'))]"/>
+    </record>
+
+
+    <record id="record_rule_crm_target_user" model="ir.rule">
+        <field name="name">CRM Target User Rule</field>
+        <field name="model_id" ref="model_crm_target"/>
+        <field name="groups" eval="[(4, ref('crm_target_user'))]"/>
+        <field name="domain_force">[('name', '=', user.id), ('select_state', '!=', 'draft'),('select_state', '!=', 'closed')]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="record_rule_crm_target_admin" model="ir.rule">
+        <field name="name">CRM Target Admin Rule</field>
+        <field name="model_id" ref="model_crm_target"/>
+        <field name="groups" eval="[(4, ref('crm_target_admin'))]"/>
+        <field name="domain_force">[]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+</odoo>
