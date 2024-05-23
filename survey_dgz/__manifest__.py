@@ -10,7 +10,6 @@
     'depends': ['survey', 'web'],
     'data': [
         'security/ir.model.access.csv',
-        'security/security.xml',
         'views/survey_inh.xml',
         'views/menu.xml',
         'views/survey.xml',
