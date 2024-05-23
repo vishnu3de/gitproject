@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
         <record id="view_survey_page" model="ir.ui.view">
         <field name="name">survey.survey</field>
         <field name="model">survey.survey</field>

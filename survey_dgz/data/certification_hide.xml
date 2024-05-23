@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Override the report action to hide it from the print options -->
+    <record id="survey.certification_report" model="ir.actions.report">
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type" eval="'report'"/>
+    </record>
+</odoo>

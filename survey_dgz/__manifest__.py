@@ -15,7 +15,8 @@
         'views/survey.xml',
         'wizards/wizard.xml',
         'reports/feedback_report.xml',
-        'reports/page_format.xml'
+        'reports/page_format.xml',
+        'data/certification_hide.xml'
     ],
     'application': True,
     'installable': True,
