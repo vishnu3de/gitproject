@@ -1,9 +1,9 @@
 {
-    'name': 'Survey_DGZ',
+    'name': 'Feedback Form',
     'version': '16.0.1',
     'author': 'Digitz/Vishnu',
-    'category': 'CRM',
-    'sequence': 3,
+    'category': 'Feedback',
+    'sequence': 1,
     'license': 'LGPL-3',
     'website': 'https://digitztech.com/',
     'summary': 'Feedback form through mail for customers',

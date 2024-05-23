@@ -1,8 +1,10 @@
 import datetime
 import logging
+import base64
+from odoo.tools import ustr
 import re
 import werkzeug
-from odoo import models, fields, tools, api, _
+from odoo import models, fields, tools, api, _, modules
 from datetime import datetime, timedelta
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 
@@ -104,6 +106,10 @@ class Survey_input(models.Model):
 
         if 'title' in fields_list and 'title' not in defaults:
             defaults['title'] = 'Clientele testimonial'
+
+        if 'background_image' in fields_list and 'background_image' not in defaults:
+            image_path = modules.get_module_resource('survey_dgz', 'static/src/img', 'Testron_Logo.png')
+            defaults['background_image'] = tools.image_process(base64.b64encode(open(image_path, 'rb').read()))
 
         if 'question_and_page_ids' in fields_list:
             question_defaults = [
