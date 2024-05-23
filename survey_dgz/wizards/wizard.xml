@@ -1,0 +1,24 @@
+<odoo>
+    <record id="view_survey_invite_wizard_form" model="ir.ui.view">
+        <field name="name">survey.invite.wizard.form</field>
+        <field name="model">survey.invite.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Survey Invite Wizard">
+                <sheet>
+                    <h1>Survey Links</h1>
+                    <field name="invite_lines">
+                        <tree editable="bottom">
+                            <field name="email"/>
+                            <field name="survey_link"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <footer>
+                    <button string="Close" class="btn-primary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+</odoo>

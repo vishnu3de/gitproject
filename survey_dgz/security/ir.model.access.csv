@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+survey_dgz.access_survey_invite_wizard.line,access_survey_invite_wizard_line,survey_dgz.model_survey_invite_wizard_line,base.group_user,1,1,1,1
+survey_dgz.access_survey_invite_wizard,access_survey_invite_wizard,survey_dgz.model_survey_invite_wizard,base.group_user,1,1,1,1
+

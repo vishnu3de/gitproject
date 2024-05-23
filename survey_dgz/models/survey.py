@@ -1,15 +1,14 @@
 import datetime
-
-from odoo import models, fields, api, _
+import logging
+import re
+import werkzeug
+from odoo import models, fields, tools, api, _
 from datetime import datetime, timedelta
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
-from odoo.exceptions import UserError
-from odoo.tools import email_split, email_normalize, email_split_and_format
-import logging
-import werkzeug
-
 
 _logger = logging.getLogger(__name__)
+
+emails_split = re.compile(r"[;,\n\r]+")
 
 
 class Question(models.Model):
@@ -65,17 +64,7 @@ class Survey_input(models.Model):
         ('minutes', 'Minutes'),
         ('days', 'Days'), ('weeks', 'Weeks')], default="days")
     date_expire = fields.Datetime(string="expire")
-    partner_ids = fields.Many2many(
-        'res.partner', 'survey_survey_partner_ids', 'survey_id', 'partner_id', string='Recipients',
-        domain="[ \
-                '|', (survey_users_can_signup, '=', 1), \
-                '|', (not survey_users_login_required, '=', 1), \
-                     ('user_ids', '!=', False), \
-            ]"
-    )
 
-    survey_users_login_required = fields.Boolean(related="users_login_required", readonly=True)
-    survey_users_can_signup = fields.Boolean(related='users_can_signup')
 
     @api.onchange('token_expiration', 'interval_type')
     def calculate_new_date(self):
@@ -147,74 +136,30 @@ class User_input(models.Model):
     _inherit = 'survey.user_input'
 
 
-class SurveyInvite(models.TransientModel):
-    _name = 'survey.invite'
+class survey_invite(models.TransientModel):
     _inherit = 'survey.invite'
 
+    def copy_link(self):
 
-
-    def _send_mail(self, answer):
-        """ Create mail specific for recipient containing notably its access token """
-        email_from = self._render_field('email_from', answer.ids)[answer.id]
-        if not email_from:
-            raise UserError(_("Unable to post message, please configure the sender's email address."))
-        subject = self._render_field('subject', answer.ids)[answer.id]
-        body = self._render_field('body', answer.ids, post_process=True)[answer.id]
-        # post the message
-        mail_values = {
-            'email_from': email_from,
-            'author_id': self.author_id.id,
-            'model': None,
-            'res_id': None,
-            'subject': subject,
-            'body_html': body,
-            'attachment_ids': [(4, att.id) for att in self.attachment_ids],
-            'auto_delete': True,
-        }
-        if answer.partner_id:
-            mail_values['recipient_ids'] = [(4, answer.partner_id.id)]
-        else:
-            mail_values['email_to'] = answer.email
-
-        # optional support of default_email_layout_xmlid in context
-        email_layout_xmlid = self.env.context.get('default_email_layout_xmlid', self.env.context.get('notif_layout'))
-        if email_layout_xmlid:
-            template_ctx = {
-                'message': self.env['mail.message'].sudo().new(dict(body=mail_values['body_html'], record_name=self.survey_id.title)),
-                'model_description': self.env['ir.model']._get('survey.survey').display_name,
-                'company': self.env.company,
-            }
-            body = self.env['ir.qweb']._render(email_layout_xmlid, template_ctx, minimal_qcontext=True, raise_if_not_found=False)
-            if body:
-                mail_values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
-            else:
-                _logger.warning('QWeb template %s not found or is empty when sending survey mails. Sending without layout', email_layout_xmlid)
-
-        return self.env['mail.mail'].sudo().create(mail_values)
-
-    def action_invite(self):
-        """ Process the wizard content and proceed with sending the related
-            email(s), rendering any template patterns on the fly if needed """
         self.ensure_one()
         Partner = self.env['res.partner']
 
         # compute partners and emails, try to find partners for given emails
-        valid_partners = self.survey_id.partner_ids
+        valid_partners = self.partner_ids
         langs = set(valid_partners.mapped('lang')) - {False}
         if len(langs) == 1:
             self = self.with_context(lang=langs.pop())
         valid_emails = []
-        emails = email_split(self.emails or '')
-        for email in emails:
+        for email in emails_split.split(self.emails or ''):
             partner = False
-            email_normalized = email_normalize(email)
+            email_normalized = tools.email_normalize(email)
             if email_normalized:
-                limit = None if self.survey_id.users_login_required else 1
+                limit = None if self.survey_users_login_required else 1
                 partner = Partner.search([('email_normalized', '=', email_normalized)], limit=limit)
             if partner:
                 valid_partners |= partner
             else:
-                email_formatted = email_split_and_format(email)
+                email_formatted = tools.email_split_and_format(email)
                 if email_formatted:
                     valid_emails.extend(email_formatted)
 
@@ -225,4 +170,39 @@ class SurveyInvite(models.TransientModel):
         for answer in answers:
             self._send_mail(answer)
 
-        return {'type': 'ir.actions.act_window_close'}
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        invite_lines = []
+
+        if self.partner_ids:
+            for invite in self.partner_ids:
+                # Ensure partner_id is a single record and not a recordset
+
+                partner_id = invite.id
+
+                # Retrieve the corresponding user input record(s)
+                user_inputs = self.env['survey.user_input'].search([
+                    ('survey_id', '=', self.survey_id.id),
+                    ('partner_id', '=', partner_id)
+                ])
+
+                for user_input in user_inputs:
+                    full_survey_link = f"{base_url}{user_input.get_start_url()}"
+                    invite_lines.append((0, 0, {
+                        'email': invite.name,
+                        'survey_link': full_survey_link
+                    }))
+        if invite_lines:
+            wizard = self.env['survey.invite.wizard'].create({
+                'invite_lines': invite_lines
+            })
+
+        return {
+            'name': 'Survey Invite Wizard',
+            'type': 'ir.actions.act_window',
+            'res_model': 'survey.invite.wizard',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_id': wizard.id,
+            'target': 'new',
+        }
+
