@@ -25,62 +25,62 @@
         </field>
     </record>
 
-<!--    <record id="crm_survey_inherited" model="ir.ui.view">-->
-<!--        <field name="name">dgz.survey.inherited</field>-->
-<!--        <field name="model">survey.survey</field>-->
-<!--        <field name="inherit_id" ref="survey.survey_survey_view_form"/>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <xpath expr="//tree/field[@name='question_type']" position="after" >-->
-<!--                 <field name="checkbox" widget="boolean_toggle"/>-->
-<!--            </xpath>-->
-<!--            <xpath expr="//header/button[@name='action_start_session']" position="attributes">-->
-<!--                <attribute name="invisible">1</attribute>-->
-<!--            </xpath>-->
-<!--            <xpath expr="//header/button[@name='action_result_survey']" position="attributes">-->
-<!--                <attribute name="invisible">1</attribute>-->
-<!--            </xpath>-->
-<!--            <xpath expr="//header/button[@name='action_print_survey']" position="attributes">-->
-<!--                <attribute name="invisible">1</attribute>-->
-<!--            </xpath>-->
-<!--            <xpath expr="//group[@name='scoring']" position="attributes">-->
-<!--                <attribute name="invisible">1</attribute>-->
-<!--            </xpath>-->
-<!--            <xpath expr="//notebook/page[@name='options']/group/group[@name='participants']" position="after">-->
-<!--                <group string="Reset" name="reset">-->
-<!--                    <label for="expire_onoff" string="Reset Link"/>-->
-<!--                    <div>-->
-<!--                        <field name="expire_onoff" class="oe_inline"/>-->
-<!--                    </div>-->
-<!--                    <label for="token_expiration" string="Expire in" attrs="{'invisible': [('expire_onoff', '=', False)]}"/>-->
-<!--                    <div>-->
-<!--                        <field name="token_expiration" class="oe_inline" attrs="{'invisible': [('expire_onoff', '=', False)]}"/>-->
-<!--                        <field name="interval_type" class="oe_inline" attrs="{'invisible': [('expire_onoff', '=', False)]}"/>-->
-<!--                    </div>-->
-<!--                    <label for="date_expire" string="Expire on" attrs="{'invisible': [('expire_onoff', '=', False)]}"/>-->
-<!--                    <div>-->
-<!--                        <field name="date_expire" attrs="{'invisible': [('expire_onoff', '=', False)]}"/>-->
-<!--                    </div>-->
+    <record id="crm_survey_inherited" model="ir.ui.view">
+        <field name="name">dgz.survey.inherited</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='question_type']" position="after" >
+                 <field name="checkbox" widget="boolean_toggle"/>
+            </xpath>
+            <xpath expr="//header/button[@name='action_start_session']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//header/button[@name='action_result_survey']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//header/button[@name='action_print_survey']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='scoring']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//notebook/page[@name='options']/group/group[@name='participants']" position="after">
+                <group string="Reset" name="reset">
+                    <label for="expire_onoff" string="Reset Link"/>
+                    <div>
+                        <field name="expire_onoff" class="oe_inline"/>
+                    </div>
+                    <label for="token_expiration" string="Expire in" attrs="{'invisible': [('expire_onoff', '=', False)]}"/>
+                    <div>
+                        <field name="token_expiration" class="oe_inline" attrs="{'invisible': [('expire_onoff', '=', False)]}"/>
+                        <field name="interval_type" class="oe_inline" attrs="{'invisible': [('expire_onoff', '=', False)]}"/>
+                    </div>
+                    <label for="date_expire" string="Expire on" attrs="{'invisible': [('expire_onoff', '=', False)]}"/>
+                    <div>
+                        <field name="date_expire" attrs="{'invisible': [('expire_onoff', '=', False)]}"/>
+                    </div>
 
-<!--                </group>-->
-<!--            </xpath>-->
-<!--            <xpath expr="//notebook/page[@name='options']/group[@name='options']/group[4]" position="attributes">-->
-<!--                <attribute name="invisible">1</attribute>-->
-<!--            </xpath>-->
-<!--        </field>-->
-<!--    </record>-->
-<!--    <record id="crm_survey_kanban_inherited" model="ir.ui.view">-->
-<!--        <field name="name">dgz.survey.kanban.inherited</field>-->
-<!--        <field name="model">survey.survey</field>-->
-<!--        <field name="inherit_id" ref="survey.survey_survey_view_kanban"/>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <xpath expr="//button[@name='action_start_session']" position="attributes">-->
-<!--                <attribute name="invisible">1</attribute>-->
-<!--            </xpath>-->
+                </group>
+            </xpath>
+            <xpath expr="//notebook/page[@name='options']/group[@name='options']/group[4]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="crm_survey_kanban_inherited" model="ir.ui.view">
+        <field name="name">dgz.survey.kanban.inherited</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_start_session']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
 
-<!--            <xpath expr="//button[@name='action_result_survey']" position="attributes">-->
-<!--                <attribute name="invisible">1</attribute>-->
-<!--            </xpath>-->
-<!--        </field>-->
-<!--    </record>-->
+            <xpath expr="//button[@name='action_result_survey']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
 
 </odoo>

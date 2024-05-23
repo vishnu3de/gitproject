@@ -57,79 +57,79 @@ class Question(models.Model):
 
 class Survey_input(models.Model):
     _inherit = 'survey.survey'
-#
-#     expire_onoff = fields.Boolean(string="Reset Link", default=False)
-#     token_expiration = fields.Integer(string='Reset Token')
-#     interval_type = fields.Selection([
-#         ('minutes', 'Minutes'),
-#         ('days', 'Days'), ('weeks', 'Weeks')], default="days")
-#     date_expire = fields.Datetime(string="expire")
-#
-#
-#     @api.onchange('token_expiration', 'interval_type')
-#     def calculate_new_date(self):
-#         """ Calculate the new date and time based on the value of my_field and the interval_type field. """
-#         now = datetime.now()
-#
-#         if self.interval_type == 'minutes':
-#             new_date = now + timedelta(minutes=self.token_expiration)
-#         elif self.interval_type == 'days':
-#             new_date = now + timedelta(days=self.token_expiration)
-#         elif self.interval_type == 'weeks':
-#             new_date = now + timedelta(weeks=self.token_expiration)
-#         else:
-#             new_date = now
-#
-#         self.date_expire = new_date
-#
-#     def check_token_expiration(self):
-#         """ Check if the survey token has expired. """
-#         now = datetime.now()
-#         if self.expire_onoff == True:
-#             if self.date_expire < now:
-#                 new_access_token = self._get_default_access_token()
-#                 self.access_token = new_access_token
-#                 self.expire_onoff = False
-#                 self.token_expiration = False
-#                 self.interval_type = False
-#                 self.date_expire = False
-#
-#     def action_send_survey(self):
-#         self.check_token_expiration()
-#         return super(Survey_input, self).action_send_survey()
-#
-#     @api.model
-#     def default_get(self, fields_list):
-#         defaults = super(Survey_input, self).default_get(fields_list)
-#
-#         if 'title' in fields_list and 'title' not in defaults:
-#             defaults['title'] = 'Clientele testimonial'
-#
-#         if 'question_and_page_ids' in fields_list:
-#             question_defaults = [
-#
-#                 (0, 0, {
-#                     'title': 'Kindly provide any additional comments or suggestions',
-#                     'question_type': 'matrix', }),
-#                 (0, 0, {'title': 'OVERALL CUSTOMER EXPERIENCE', 'question_type': 'char_box'}),
-#             ]
-#
-#             defaults['question_and_page_ids'] = question_defaults
-#
-#         defaults['questions_layout'] = 'one_page'
-#         defaults[
-#             'description_done'] = 'Thank you for taking the time to provide your feedback. Your insights are invaluable to us as we strive for excellence. We look forward to continuing to serve you and exceeding your expectations in the future. If you have any further comments or suggestions, please feel free to contact us. Have a great day!'
-#         defaults[
-#             'description'] = 'At Testron, we value your thoughts and opinions. Your feedback helps us understand your experiences better, allowing us to continually improve our products and services to better serve you. Please take a few moments to fill out this feedback form, and let us know how we re doing. Your responses are invaluable to us and will be kept confidential.'
-#
-#         return defaults
-#
-#     def _get_pages_and_questions_to_show(self):
-#         result = super(Survey_input, self)._get_pages_and_questions_to_show()
-#         result = result.filtered(lambda question: question.checkbox)
-#         if not result:
-#             raise ValidationError("No Validated Questions.")
-#         return result
+
+    expire_onoff = fields.Boolean(string="Reset Link", default=False)
+    token_expiration = fields.Integer(string='Reset Token')
+    interval_type = fields.Selection([
+        ('minutes', 'Minutes'),
+        ('days', 'Days'), ('weeks', 'Weeks')], default="days")
+    date_expire = fields.Datetime(string="expire")
+
+
+    @api.onchange('token_expiration', 'interval_type')
+    def calculate_new_date(self):
+        """ Calculate the new date and time based on the value of my_field and the interval_type field. """
+        now = datetime.now()
+
+        if self.interval_type == 'minutes':
+            new_date = now + timedelta(minutes=self.token_expiration)
+        elif self.interval_type == 'days':
+            new_date = now + timedelta(days=self.token_expiration)
+        elif self.interval_type == 'weeks':
+            new_date = now + timedelta(weeks=self.token_expiration)
+        else:
+            new_date = now
+
+        self.date_expire = new_date
+
+    def check_token_expiration(self):
+        """ Check if the survey token has expired. """
+        now = datetime.now()
+        if self.expire_onoff == True:
+            if self.date_expire < now:
+                new_access_token = self._get_default_access_token()
+                self.access_token = new_access_token
+                self.expire_onoff = False
+                self.token_expiration = False
+                self.interval_type = False
+                self.date_expire = False
+
+    def action_send_survey(self):
+        self.check_token_expiration()
+        return super(Survey_input, self).action_send_survey()
+
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super(Survey_input, self).default_get(fields_list)
+
+        if 'title' in fields_list and 'title' not in defaults:
+            defaults['title'] = 'Clientele testimonial'
+
+        if 'question_and_page_ids' in fields_list:
+            question_defaults = [
+
+                (0, 0, {
+                    'title': 'Kindly provide any additional comments or suggestions',
+                    'question_type': 'matrix', }),
+                (0, 0, {'title': 'OVERALL CUSTOMER EXPERIENCE', 'question_type': 'char_box'}),
+            ]
+
+            defaults['question_and_page_ids'] = question_defaults
+
+        defaults['questions_layout'] = 'one_page'
+        defaults[
+            'description_done'] = 'Thank you for taking the time to provide your feedback. Your insights are invaluable to us as we strive for excellence. We look forward to continuing to serve you and exceeding your expectations in the future. If you have any further comments or suggestions, please feel free to contact us. Have a great day!'
+        defaults[
+            'description'] = 'At Testron, we value your thoughts and opinions. Your feedback helps us understand your experiences better, allowing us to continually improve our products and services to better serve you. Please take a few moments to fill out this feedback form, and let us know how we re doing. Your responses are invaluable to us and will be kept confidential.'
+
+        return defaults
+
+    def _get_pages_and_questions_to_show(self):
+        result = super(Survey_input, self)._get_pages_and_questions_to_show()
+        result = result.filtered(lambda question: question.checkbox)
+        if not result:
+            raise ValidationError("No Validated Questions.")
+        return result
 
 
 class User_input(models.Model):
